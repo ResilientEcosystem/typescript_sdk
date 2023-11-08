@@ -32,4 +32,4 @@ declare class MetadataEndpoint extends NamespacedDriver {
     constructor(driver: Resdb);
     get(search: string, limit: number, headers: DictionaryObject): Object;
 }
-export { TransactionsEndpoint, OutputsEndpoint, BlocksEndpoint, AssetsEndpoint, MetadataEndpoint };
+export { TransactionsEndpoint, OutputsEndpoint, BlocksEndpoint, AssetsEndpoint, MetadataEndpoint, };

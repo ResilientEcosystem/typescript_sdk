@@ -1,20 +1,16 @@
-import * as NodeUtils from "../utils/common/nodeUtils";
-import { 
+import * as NodeUtils from '../utils/common/nodeUtils';
+import {
     TransactionsEndpoint,
     OutputsEndpoint,
     BlocksEndpoint,
     AssetsEndpoint,
-    MetadataEndpoint
-} from "./endpoints";
-import {
-    DictionaryObject,
-    Node
-} from '../utils/types/Connection';
-
+    MetadataEndpoint,
+} from './endpoints';
+import { DictionaryObject, Node } from '../utils/types/Connection';
 
 interface ResDBConfig {
-    headers?: DictionaryObject,
-    timeout?: number
+    headers?: DictionaryObject;
+    timeout?: number;
 }
 
 class Resdb {
@@ -25,9 +21,13 @@ class Resdb {
     private _assets: AssetsEndpoint;
     private _metadata: MetadataEndpoint;
     private _blocks: BlocksEndpoint;
-    public api_prefix: string = process.env.RESDB_VERSION;
+    public api_prefix: string = process.env.RESDB_VERSION || 'v1';
 
-    public constructor(nodes: string[] | Node[], tranport_module: any, config: ResDBConfig = {}) {
+    public constructor(
+        nodes: string[] | Node[],
+        tranport_module: any,
+        config: ResDBConfig = {}
+    ) {
         this._nodes = NodeUtils.normalize_nodes(nodes, config.headers);
         this._transaction = new TransactionsEndpoint(this);
         this._outputs = new OutputsEndpoint(this);
@@ -63,7 +63,6 @@ class Resdb {
     public blocks(): BlocksEndpoint {
         return this._blocks;
     }
-    
 }
 
 export default Resdb;

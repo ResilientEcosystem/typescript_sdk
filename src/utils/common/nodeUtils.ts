@@ -2,7 +2,8 @@ import * as url from 'url';
 import { DateTime } from 'luxon';
 import { DictionaryObject, Node } from '../types/Connection';
 
-const DEFAULT_NODE: string = process.env.DEFAULT_NODE;
+const DEFAULT_NODE: string =
+    process.env.DEFAULT_NODE || 'http://localhost:9984';
 
 const serialize = (data: DictionaryObject = {}): string => {
     const sortedKeys: string[] = Object.keys(data).sort();
@@ -44,7 +45,7 @@ const normalize_url = (node: string): string => {
 
 const normalize_node = (
     node: string | Node,
-    headers: DictionaryObject | null
+    headers: DictionaryObject | undefined
 ): Node => {
     if (!headers) {
         headers = {};
@@ -67,7 +68,7 @@ const normalize_node = (
 
 const normalize_nodes = (
     nodes: Node[] | string[],
-    headers: DictionaryObject | null
+    headers: DictionaryObject | undefined
 ): Node[] => {
     if (!nodes.length) {
         return [normalize_node(DEFAULT_NODE, headers)];
@@ -79,6 +80,4 @@ const normalize_nodes = (
     return normalizedNodes;
 };
 
-export {
-    normalize_nodes
-}
+export { normalize_nodes };

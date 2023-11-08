@@ -18,8 +18,9 @@ class AxiosAdapter {
             retryDelay: axiosRetry.exponentialDelay, // Exponential delay between retries
             retryCondition: (error) => {
                 return (
-                    axiosRetry.isNetworkError(error) ||
-                    (error.response && error.response.status === 500)
+                    (axiosRetry.isNetworkError(error) ||
+                        (error.response && error.response.status === 500)) ??
+                    false
                 );
             },
         });

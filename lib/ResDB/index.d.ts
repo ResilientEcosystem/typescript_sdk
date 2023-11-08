@@ -1,4 +1,4 @@
-import { TransactionsEndpoint, OutputsEndpoint, BlocksEndpoint, AssetsEndpoint, MetadataEndpoint } from "./endpoints";
+import { TransactionsEndpoint, OutputsEndpoint, BlocksEndpoint, AssetsEndpoint, MetadataEndpoint } from './endpoints';
 import { DictionaryObject, Node } from '../utils/types/Connection';
 interface ResDBConfig {
     headers?: DictionaryObject;

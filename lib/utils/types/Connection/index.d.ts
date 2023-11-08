@@ -1,8 +1,8 @@
-declare type DictionaryObject = {
+type DictionaryObject = {
     [key: string]: RequestValueTypes;
 };
-declare type RequestValueTypes = string | string[] | number | boolean | null;
-declare type HttpMethodType = 'POST' | 'DELETE' | 'GET' | 'PUT';
+type RequestValueTypes = string | string[] | number | boolean | null;
+type HttpMethodType = 'POST' | 'DELETE' | 'GET' | 'PUT';
 interface Node {
     endpoint: string;
     headers?: DictionaryObject;

@@ -1,8 +1,6 @@
 type CryptoKeypair = {
-    publicKey: string,
-    privateKey: string
-}
+    publicKey: string;
+    privateKey: string;
+};
 
-export {
-    CryptoKeypair
-}
+export { CryptoKeypair };

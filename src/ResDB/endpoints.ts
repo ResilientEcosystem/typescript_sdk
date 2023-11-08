@@ -1,7 +1,6 @@
 import { DictionaryObject } from '../utils/types/Connection';
 import Resdb from './index';
 
-
 interface Endpoint {
     get(...args: unknown[]): Object;
 }
@@ -9,7 +8,7 @@ interface Endpoint {
 abstract class NamespacedDriver implements Endpoint {
     private readonly _path: string;
     private readonly _driver: Resdb;
-    
+
     public constructor(path: string, driver: Resdb) {
         this._path = path;
         this._driver = driver;
@@ -30,14 +29,18 @@ abstract class NamespacedDriver implements Endpoint {
     abstract get(...args: unknown[]): Object;
 }
 
-class TransactionsEndpoint extends NamespacedDriver{
+class TransactionsEndpoint extends NamespacedDriver {
     public constructor(driver: Resdb) {
-        super("/transactions/", driver);
-    };
+        super('/transactions/', driver);
+    }
 
     // public static prepare();
     // public static fulfill();
-    public get(asset_id: string, operation: string, headers: DictionaryObject): Object {
+    public get(
+        asset_id: string,
+        operation: string,
+        headers: DictionaryObject
+    ): Object {
         return this.transport;
     }
     // public send_async(transaction, headers: DictionaryObject = {});
@@ -51,38 +54,50 @@ class TransactionsEndpoint extends NamespacedDriver{
 
 class OutputsEndpoint extends NamespacedDriver {
     public constructor(driver: Resdb) {
-        super("/outputs/", driver);
+        super('/outputs/', driver);
     }
-    
-    public get(public_key: string, spent: boolean = false, headers: DictionaryObject = {}): Object {
-        return {}
+
+    public get(
+        public_key: string,
+        spent: boolean = false,
+        headers: DictionaryObject = {}
+    ): Object {
+        return {};
     }
 }
 
 class BlocksEndpoint extends NamespacedDriver {
     public constructor(driver: Resdb) {
-        super("/blocks/", driver)
+        super('/blocks/', driver);
     }
     public get(txid: string, headers: DictionaryObject): Object {
-        return {}
+        return {};
     }
 }
 
 class AssetsEndpoint extends NamespacedDriver {
     public constructor(driver: Resdb) {
-        super("/assets/", driver)
+        super('/assets/', driver);
     }
-    public get(search: string, limit: number = 0, headers: DictionaryObject): Object {
-        return {}
+    public get(
+        search: string,
+        limit: number = 0,
+        headers: DictionaryObject
+    ): Object {
+        return {};
     }
 }
 
 class MetadataEndpoint extends NamespacedDriver {
     public constructor(driver: Resdb) {
-        super("/metadata/", driver)
+        super('/metadata/', driver);
     }
-    public get(search: string, limit: number = 0, headers: DictionaryObject): Object {
-        return {}
+    public get(
+        search: string,
+        limit: number = 0,
+        headers: DictionaryObject
+    ): Object {
+        return {};
     }
 }
 
@@ -91,5 +106,5 @@ export {
     OutputsEndpoint,
     BlocksEndpoint,
     AssetsEndpoint,
-    MetadataEndpoint
-}
+    MetadataEndpoint,
+};

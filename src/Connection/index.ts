@@ -43,7 +43,7 @@ class Connection {
         method: HttpMethodType,
         path: string,
         config?: AxiosRequestConfig<any>
-    ): Promise<[AxiosResponse<unknown> | void, Error | null]> {
+    ): Promise<[AxiosResponse<unknown> | null, Error | null]> {
         try {
             const response: AxiosResponse<unknown> = await this._request(
                 method,

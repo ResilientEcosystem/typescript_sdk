@@ -1,13 +1,9 @@
 import dotenv from 'dotenv';
 
-import Crypto from "./Crypto";
+import Crypto from './Crypto';
 import Connection from './Connection';
 import Resdb from './ResDB';
 
-dotenv.config()
+dotenv.config();
 
-export {
-    Crypto,
-    Connection,
-    Resdb
-}
+export { Crypto, Connection, Resdb };
