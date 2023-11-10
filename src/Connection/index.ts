@@ -1,4 +1,4 @@
-import { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { Axios, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 
 import { DictionaryObject, HttpMethodType } from '../utils/types/Connection';
 
@@ -15,6 +15,7 @@ class Connection {
 
     public constructor(nodeUrl: string, headers: DictionaryObject = {}) {
         this.nodeUrl = nodeUrl;
+        this.backoffInMs = 0;
         this.session = AxiosAdapter.createAxiosSession(nodeUrl, headers);
     }
 
@@ -35,20 +36,38 @@ class Connection {
             });
         return response;
     }
-    private getBackoffInMs(): number {
+
+    public getBackoffInMs(): number {
         return this.backoffInMs;
+    }
+
+    private updateBackoffInMs(
+        isSuccess: boolean,
+        backoffCapInMs: number = 0,
+        numRetries: number = 0
+    ): void {
+        if (isSuccess) this.backoffInMs = 0;
+        this.backoffInMs = BACKOFF_TIMEDELTA_IN_MS * Math.pow(2, numRetries);
+    }
+
+    private delay(): Promise<void> {
+        return new Promise((r) => setTimeout(r, this.getBackoffInMs()));
     }
 
     public async request(
         method: HttpMethodType,
         path: string,
+        backoffCap: number = 0,
         config?: AxiosRequestConfig<any>
     ): Promise<[AxiosResponse<unknown> | null, Error | null]> {
+        await this.delay();
+        let response: AxiosResponse<unknown>;
         try {
-            const response: AxiosResponse<unknown> = await this._request(
-                method,
-                path,
-                config
+            response = await this._request(method, path, config);
+            this.updateBackoffInMs(
+                true,
+                backoffCap,
+                Number(response.config['axios-retry'])
             );
             return [response, null];
         } catch (err) {
@@ -58,6 +77,11 @@ class Connection {
                 path,
                 config,
             });
+            this.updateBackoffInMs(
+                false,
+                backoffCap,
+                Number(response.config['axios-retry'])
+            );
             return [null, err];
         }
     }

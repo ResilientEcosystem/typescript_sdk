@@ -9,7 +9,15 @@ const RoundRobinPicker: PickerInterface = class {
         if (connections.length === 1) {
             return connections[0];
         }
-        return connections[1]; // complete this seciont with the backoff delta
+        let minObject: Connection = connections[0];
+
+        for (const obj of connections) {
+            if (obj.getBackoffInMs() < minObject.getBackoffInMs()) {
+                minObject = obj;
+            }
+        }
+
+        return minObject;
     }
 };
 

@@ -7,7 +7,9 @@ declare class Connection {
     constructor(nodeUrl: string, headers?: DictionaryObject);
     private getSession;
     private _request;
-    private getBackoffInMs;
-    request(method: HttpMethodType, path: string, config?: AxiosRequestConfig<any>): Promise<[AxiosResponse<unknown> | null, Error | null]>;
+    getBackoffInMs(): number;
+    private updateBackoffInMs;
+    private delay;
+    request(method: HttpMethodType, path: string, backoffCap?: number, config?: AxiosRequestConfig<any>): Promise<[AxiosResponse<unknown> | null, Error | null]>;
 }
 export default Connection;

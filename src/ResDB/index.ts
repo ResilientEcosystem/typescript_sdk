@@ -1,4 +1,4 @@
-import * as NodeUtils from '../utils/common/nodeUtils';
+import NodeUtils from '../utils/common/nodeUtils';
 import {
     TransactionsEndpoint,
     OutputsEndpoint,
