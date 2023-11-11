@@ -1,7 +1,8 @@
 import { Pool } from '../Pool';
-import NodeUtils from '../../lib/utils/common/nodeUtils';
-import { Node } from '../utils/types/Connection';
 import Connection from '../Connection';
+import NodeUtils from '../../lib/utils/common/nodeUtils';
+import { HttpMethodType, Node } from '../utils/types/Connection';
+import { AxiosRequestConfig, AxiosResponse } from 'axios';
 
 const NO_TIMEOUT_BACKOFF_CAP = 10000;
 
@@ -19,5 +20,16 @@ class Transport {
         return this.nodes.map(
             ({ headers, endpoint }) => new Connection(endpoint, headers)
         );
+    }
+
+    public async forward_request(
+        method: HttpMethodType,
+        path: string,
+        config?: AxiosRequestConfig<any>
+    ): Promise<[AxiosResponse<unknown> | null, Error | null]> {
+        // do some checking with the backoff delta, ensure no errors with the pool call
+        return await this.connection_pool
+            .getConnection()
+            .request(method, path, NO_TIMEOUT_BACKOFF_CAP, config);
     }
 }
