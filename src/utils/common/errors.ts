@@ -1,10 +1,8 @@
-class RequestError implements Error {
-    constructor(message?: string) {
-        this.name = 'RequestError';
-        this.message = message ?? '';
-    }
+class ResilientDBError implements Error {
     public name: string;
     public message: string;
+    public constructor(message?: string) {
+        this.name = 'ResilientDBError';
+        this.message = message ?? '';
+    }
 }
-
-export { RequestError };

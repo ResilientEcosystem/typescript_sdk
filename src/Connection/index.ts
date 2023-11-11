@@ -46,8 +46,14 @@ class Connection {
         backoffCapInMs: number = 0,
         numRetries: number = 0
     ): void {
-        if (isSuccess) this.backoffInMs = 0;
-        this.backoffInMs = BACKOFF_TIMEDELTA_IN_MS * Math.pow(2, numRetries);
+        if (isSuccess) {
+            this.backoffInMs = 0;
+            return;
+        }
+        this.backoffInMs = Math.min(
+            BACKOFF_TIMEDELTA_IN_MS * Math.pow(2, numRetries),
+            backoffCapInMs
+        );
     }
 
     private delay(): Promise<void> {

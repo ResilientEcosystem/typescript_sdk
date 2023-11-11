@@ -21,7 +21,7 @@ class Resdb {
     private _assets: AssetsEndpoint;
     private _metadata: MetadataEndpoint;
     private _blocks: BlocksEndpoint;
-    public api_prefix: string = process.env.RESDB_VERSION || 'v1';
+    public api_prefix: string = process.env.RESDB_VERSION || '/v1';
 
     public constructor(
         nodes: string[] | Node[],

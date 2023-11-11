@@ -1,4 +1,5 @@
 import Crypto from './Crypto';
 import Connection from './Connection';
 import Resdb from './ResDB';
-export { Crypto, Connection, Resdb };
+import { Pool } from './Pool';
+export { Crypto, Connection, Resdb, Pool };
