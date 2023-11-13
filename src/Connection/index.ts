@@ -1,4 +1,4 @@
-import { Axios, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 
 import { DictionaryObject, HttpMethodType } from '../utils/types/Connection';
 
@@ -8,7 +8,23 @@ import logger from '../utils/common/logger';
 
 const BACKOFF_TIMEDELTA_IN_MS = 500;
 
-class Connection {
+interface ConnectionInterface {
+    getBackoffInMs(): number;
+    request(
+        method: HttpMethodType,
+        path: string,
+        backoffCap: number,
+        config?: AxiosRequestConfig<any>
+    ): Promise<[AxiosResponse<unknown> | null, Error | null]>;
+}
+
+interface ConnectionConstructor {
+    new (nodeUrl: string, headers: DictionaryObject): ConnectionInterface;
+}
+
+declare var ConnectionInterface: ConnectionConstructor;
+
+class Connection implements ConnectionInterface {
     private readonly nodeUrl: string;
     private session: AxiosInstance;
     private backoffInMs: number;
@@ -56,8 +72,8 @@ class Connection {
         );
     }
 
-    private delay(): Promise<void> {
-        return new Promise((r) => setTimeout(r, this.getBackoffInMs()));
+    private async delay(): Promise<void> {
+        return await new Promise((r) => setTimeout(r, this.getBackoffInMs()));
     }
 
     public async request(
@@ -73,7 +89,7 @@ class Connection {
             this.updateBackoffInMs(
                 true,
                 backoffCap,
-                Number(response.config['axios-retry'])
+                Number(response?.config['axios-retry']) ?? 0
             );
             return [response, null];
         } catch (err) {
@@ -86,11 +102,11 @@ class Connection {
             this.updateBackoffInMs(
                 false,
                 backoffCap,
-                Number(response.config['axios-retry'])
+                Number(response?.config['axios-retry']) ?? 0
             );
             return [null, err];
         }
     }
 }
 
-export default Connection;
+export { Connection, ConnectionInterface };

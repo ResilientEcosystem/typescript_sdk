@@ -1,8 +1,6 @@
 type DictionaryObject = {
-    [key: string]: RequestValueTypes;
+    [key: string]: any;
 };
-
-type RequestValueTypes = string | string[] | number | boolean | null;
 
 type HttpMethodType = 'POST' | 'DELETE' | 'GET' | 'PUT';
 

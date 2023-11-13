@@ -1,5 +1,5 @@
 import { Pool } from '../Pool';
-import Connection from '../Connection';
+import { ConnectionInterface, Connection } from '../Connection';
 import NodeUtils from '../utils/common/nodeUtils';
 import { HttpMethodType, Node } from '../utils/types/Connection';
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
@@ -16,7 +16,7 @@ class Transport {
         this.connection_pool = new Pool(this.construct_endpoints());
     }
 
-    private construct_endpoints(): Connection[] {
+    private construct_endpoints(): ConnectionInterface[] {
         return this.nodes.map(
             ({ headers, endpoint }) => new Connection(endpoint, headers)
         );
