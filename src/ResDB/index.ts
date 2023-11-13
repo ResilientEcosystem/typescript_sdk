@@ -7,6 +7,7 @@ import {
     MetadataEndpoint,
 } from './endpoints';
 import { DictionaryObject, Node } from '../utils/types/Connection';
+import Transport from '../Transport';
 
 interface ResDBConfig {
     headers?: DictionaryObject;
@@ -15,7 +16,7 @@ interface ResDBConfig {
 
 class Resdb {
     private _nodes: Node[];
-    private _transport: any;
+    private _transport: Transport;
     private _transaction: TransactionsEndpoint;
     private _outputs: OutputsEndpoint;
     private _assets: AssetsEndpoint;
@@ -25,10 +26,14 @@ class Resdb {
 
     public constructor(
         nodes: string[] | Node[],
-        tranport_module: any,
+        transportModule: typeof Transport = Transport,
         config: ResDBConfig = {}
     ) {
         this._nodes = NodeUtils.normalize_nodes(nodes, config.headers);
+        this._transport = new transportModule(
+            this._nodes,
+            config.timeout || 20
+        );
         this._transaction = new TransactionsEndpoint(this);
         this._outputs = new OutputsEndpoint(this);
         this._assets = new AssetsEndpoint(this);
@@ -56,7 +61,7 @@ class Resdb {
         return this._metadata;
     }
 
-    public transport(): any {
+    public transport(): Transport {
         return this._transport;
     }
 

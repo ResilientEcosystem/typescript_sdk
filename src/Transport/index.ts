@@ -1,6 +1,6 @@
 import { Pool } from '../Pool';
 import Connection from '../Connection';
-import NodeUtils from '../../lib/utils/common/nodeUtils';
+import NodeUtils from '../utils/common/nodeUtils';
 import { HttpMethodType, Node } from '../utils/types/Connection';
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
 
@@ -33,3 +33,5 @@ class Transport {
             .request(method, path, NO_TIMEOUT_BACKOFF_CAP, config);
     }
 }
+
+export default Transport;
