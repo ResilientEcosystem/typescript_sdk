@@ -1,8 +1,12 @@
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { DictionaryObject, HttpMethodType } from '../utils/types/Connection';
+interface RequestConfig {
+    backoffCap?: number;
+    axiosConfig?: AxiosRequestConfig<any>;
+}
 interface ConnectionInterface {
     getBackoffInMs(): number;
-    request(method: HttpMethodType, path: string, backoffCap: number, config?: AxiosRequestConfig<any>): Promise<[AxiosResponse<unknown> | null, Error | null]>;
+    request(method: HttpMethodType, path: string, config: RequestConfig): Promise<[AxiosResponse<unknown> | null, Error | null]>;
 }
 interface ConnectionConstructor {
     new (nodeUrl: string, headers: DictionaryObject): ConnectionInterface;
@@ -18,6 +22,6 @@ declare class Connection implements ConnectionInterface {
     getBackoffInMs(): number;
     private updateBackoffInMs;
     private delay;
-    request(method: HttpMethodType, path: string, backoffCap?: number, config?: AxiosRequestConfig<any>): Promise<[AxiosResponse<unknown> | null, Error | null]>;
+    request(method: HttpMethodType, path: string, config: RequestConfig): Promise<[AxiosResponse<unknown> | null, Error | null]>;
 }
 export { Connection, ConnectionInterface };

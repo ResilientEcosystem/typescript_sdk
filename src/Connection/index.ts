@@ -8,13 +8,17 @@ import logger from '../utils/common/logger';
 
 const BACKOFF_TIMEDELTA_IN_MS = 500;
 
+interface RequestConfig {
+    backoffCap?: number;
+    axiosConfig?: AxiosRequestConfig<any>;
+}
+
 interface ConnectionInterface {
     getBackoffInMs(): number;
     request(
         method: HttpMethodType,
         path: string,
-        backoffCap: number,
-        config?: AxiosRequestConfig<any>
+        config: RequestConfig
     ): Promise<[AxiosResponse<unknown> | null, Error | null]>;
 }
 
@@ -22,6 +26,7 @@ interface ConnectionConstructor {
     new (nodeUrl: string, headers: DictionaryObject): ConnectionInterface;
 }
 
+// ambient declaration - links ConnectionConstructor to ConnectionInterface
 declare var ConnectionInterface: ConnectionConstructor;
 
 class Connection implements ConnectionInterface {
@@ -42,13 +47,13 @@ class Connection implements ConnectionInterface {
     private async _request(
         method: string,
         path: string,
-        config?: AxiosRequestConfig<any>
+        requestConfig: AxiosRequestConfig<any>
     ): Promise<AxiosResponse<unknown | void>> {
         const response: AxiosResponse<unknown> =
             await this.getSession().request({
                 method,
                 url: path,
-                ...config,
+                ...requestConfig,
             });
         return response;
     }
@@ -79,16 +84,15 @@ class Connection implements ConnectionInterface {
     public async request(
         method: HttpMethodType,
         path: string,
-        backoffCap: number = 0,
-        config?: AxiosRequestConfig<any>
+        config: RequestConfig
     ): Promise<[AxiosResponse<unknown> | null, Error | null]> {
         await this.delay();
         let response: AxiosResponse<unknown>;
         try {
-            response = await this._request(method, path, config);
+            response = await this._request(method, path, config?.axiosConfig);
             this.updateBackoffInMs(
                 true,
-                backoffCap,
+                config?.backoffCap ?? 0,
                 Number(response?.config['axios-retry']) ?? 0
             );
             return [response, null];
@@ -101,7 +105,7 @@ class Connection implements ConnectionInterface {
             });
             this.updateBackoffInMs(
                 false,
-                backoffCap,
+                config?.backoffCap ?? 0,
                 Number(response?.config['axios-retry']) ?? 0
             );
             return [null, err];
