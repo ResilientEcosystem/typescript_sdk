@@ -3,7 +3,12 @@ import * as CryptoJS from 'crypto-js';
 
 import { CryptoKeypair } from '../utils/types/Crypto/index';
 
-class Crypto {
+interface CryptoInterface {
+    generateKeypair(): CryptoKeypair;
+    hashData(data: string): string;
+}
+
+const Crypto: CryptoInterface = class {
     static generateKeypair(): CryptoKeypair {
         const keypair = crypto.generateKeyPairSync('ed25519', {
             publicKeyEncoding: {
@@ -32,6 +37,6 @@ class Crypto {
     private static encodeData(data: string): string {
         return Buffer.from(data, 'utf-8').toString();
     }
-}
+};
 
-export default Crypto;
+export { Crypto, CryptoInterface };

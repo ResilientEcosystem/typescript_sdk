@@ -1,4 +1,9 @@
-import { Resdb } from './lib';
+import { Resdb, Crypto, CryptoInterface } from './lib';
 
 
-const resDb: Resdb = new Resdb(["http://string"], {})
+function doSomething(crypt: CryptoInterface = Crypto): void {
+    const stuff = "GJLFJGLFJ";
+    console.log(crypt.hashData(stuff));
+}
+
+doSomething()

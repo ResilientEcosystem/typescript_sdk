@@ -1,8 +1,7 @@
 import { CryptoKeypair } from '../utils/types/Crypto/index';
-declare class Crypto {
-    static generateKeypair(): CryptoKeypair;
-    static hashData(data: string): string;
-    private static decodeKey;
-    private static encodeData;
+interface CryptoInterface {
+    generateKeypair(): CryptoKeypair;
+    hashData(data: string): string;
 }
-export default Crypto;
+declare const Crypto: CryptoInterface;
+export { Crypto, CryptoInterface };
