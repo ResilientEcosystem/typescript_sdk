@@ -1,5 +1,6 @@
 import * as url from 'url';
 import { DateTime } from 'luxon';
+import { AxiosHeaders } from 'axios';
 import { DictionaryObject, Node } from '../types/Connection';
 
 class NodeUtils {
@@ -18,7 +19,7 @@ class NodeUtils {
 
     public static normalize_nodes = (
         nodes: Node[] | string[],
-        headers: DictionaryObject | undefined
+        headers: AxiosHeaders | undefined
     ): Node[] => {
         if (!nodes.length) {
             return [this.normalize_node(this.DEFAULT_NODE, headers)];
@@ -60,10 +61,10 @@ class NodeUtils {
 
     private static normalize_node = (
         node: string | Node,
-        headers: DictionaryObject | undefined
+        headers: AxiosHeaders | undefined
     ): Node => {
         if (!headers) {
-            headers = {};
+            headers = new AxiosHeaders();
         }
         let url;
         if (typeof node === 'string') {
@@ -74,10 +75,7 @@ class NodeUtils {
         // const node_headers = {...headers}
         return {
             endpoint: url,
-            headers: {
-                ...headers,
-                // ...node_headers
-            },
+            headers: new AxiosHeaders(headers),
         };
     };
 }

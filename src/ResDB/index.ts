@@ -1,4 +1,7 @@
+import { Transport, TransportInterface } from '../Transport';
 import NodeUtils from '../utils/common/nodeUtils';
+import { AxiosHeaders, AxiosResponse } from 'axios';
+
 import {
     TransactionsEndpoint,
     OutputsEndpoint,
@@ -6,17 +9,17 @@ import {
     AssetsEndpoint,
     MetadataEndpoint,
 } from './endpoints';
-import { DictionaryObject, Node } from '../utils/types/Connection';
-import Transport from '../Transport';
+import { Node } from '../utils/types/Connection';
 
 interface ResDBConfig {
-    headers?: DictionaryObject;
+    transportModule?: typeof TransportInterface;
+    headers?: AxiosHeaders;
     timeout?: number;
 }
 
 class Resdb {
     private _nodes: Node[];
-    private _transport: Transport;
+    private _transport: TransportInterface;
     private _transaction: TransactionsEndpoint;
     private _outputs: OutputsEndpoint;
     private _assets: AssetsEndpoint;
@@ -24,15 +27,14 @@ class Resdb {
     private _blocks: BlocksEndpoint;
     public api_prefix: string = process.env.RESDB_VERSION || '/v1';
 
-    public constructor(
-        nodes: string[] | Node[],
-        transportModule: typeof Transport = Transport,
-        config: ResDBConfig = {}
-    ) {
+    public constructor(nodes: string[] | Node[], config: ResDBConfig = {}) {
+        const transportModule: typeof TransportInterface =
+            config?.transportModule ?? Transport;
+
         this._nodes = NodeUtils.normalize_nodes(nodes, config.headers);
         this._transport = new transportModule(
             this._nodes,
-            config.timeout || 20
+            config?.timeout || 20
         );
         this._transaction = new TransactionsEndpoint(this);
         this._outputs = new OutputsEndpoint(this);
@@ -61,12 +63,18 @@ class Resdb {
         return this._metadata;
     }
 
-    public transport(): Transport {
+    public transport(): TransportInterface {
         return this._transport;
     }
 
     public blocks(): BlocksEndpoint {
         return this._blocks;
+    }
+
+    public async info(
+        headers: AxiosHeaders
+    ): Promise<[AxiosResponse<unknown> | null, Error | null]> {
+        return this.transport().forwardRequest('GET', '/', { headers });
     }
 }
 

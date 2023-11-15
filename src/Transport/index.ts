@@ -1,14 +1,33 @@
-import { Pool } from '../Pool';
+import * as _ from 'lodash';
+import { Pool, PoolInterface } from '../Pool';
 import { ConnectionInterface, Connection } from '../Connection';
-import { HttpMethodType, Node } from '../utils/types/Connection';
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
+
+import { HttpMethodType, Node } from '../utils/types/Connection';
 
 const NO_TIMEOUT_BACKOFF_CAP = 10000;
 
-class Transport {
+interface TransportInterface {
+    nodes: Node[];
+    timeoutInMs: number;
+    connectionPool: PoolInterface;
+    forwardRequest(
+        method: HttpMethodType,
+        path: string,
+        axiosConfig?: AxiosRequestConfig<any>
+    ): Promise<[AxiosResponse<unknown> | null, Error | null]>;
+}
+
+interface TransportConstructor {
+    new (nodes: Node[], timeoutInMs: number): TransportInterface;
+}
+
+declare var TransportInterface: TransportConstructor;
+
+class Transport implements TransportInterface {
     public nodes: Node[];
     public timeoutInMs: number;
-    public connectionPool: Pool;
+    public connectionPool: PoolInterface;
     public constructor(nodes: Node[], timeoutInMs: number = 0) {
         this.nodes = nodes;
         this.timeoutInMs = timeoutInMs;
@@ -16,7 +35,8 @@ class Transport {
     }
 
     private constructEndpoints(): ConnectionInterface[] {
-        return this.nodes.map(
+        return _.map<Node, Connection>(
+            this.nodes,
             ({ headers, endpoint }) => new Connection(endpoint, headers)
         );
     }
@@ -34,4 +54,4 @@ class Transport {
     }
 }
 
-export default Transport;
+export { Transport, TransportInterface };

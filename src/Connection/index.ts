@@ -1,10 +1,13 @@
-import { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
-
-import { DictionaryObject, HttpMethodType } from '../utils/types/Connection';
-
+import {
+    AxiosHeaders,
+    AxiosInstance,
+    AxiosRequestConfig,
+    AxiosResponse,
+} from 'axios';
 import AxiosAdapter from '../utils/common/axiosAdapter';
-
 import logger from '../utils/common/logger';
+
+import { HttpMethodType } from '../utils/types/Connection';
 
 const BACKOFF_TIMEDELTA_IN_MS = 500;
 
@@ -23,7 +26,7 @@ interface ConnectionInterface {
 }
 
 interface ConnectionConstructor {
-    new (nodeUrl: string, headers: DictionaryObject): ConnectionInterface;
+    new (nodeUrl: string, headers: AxiosHeaders): ConnectionInterface;
 }
 
 // ambient declaration - links ConnectionConstructor to ConnectionInterface
@@ -34,7 +37,10 @@ class Connection implements ConnectionInterface {
     private session: AxiosInstance;
     private backoffInMs: number;
 
-    public constructor(nodeUrl: string, headers: DictionaryObject = {}) {
+    public constructor(
+        nodeUrl: string,
+        headers: AxiosHeaders = new AxiosHeaders()
+    ) {
         this.nodeUrl = nodeUrl;
         this.backoffInMs = 0;
         this.session = AxiosAdapter.createAxiosSession(nodeUrl, headers);
@@ -47,13 +53,13 @@ class Connection implements ConnectionInterface {
     private async _request(
         method: string,
         path: string,
-        requestConfig: AxiosRequestConfig<any>
+        axiosConfig: AxiosRequestConfig<any>
     ): Promise<AxiosResponse<unknown | void>> {
         const response: AxiosResponse<unknown> =
             await this.getSession().request({
                 method,
                 url: path,
-                ...requestConfig,
+                ...axiosConfig,
             });
         return response;
     }
@@ -84,15 +90,19 @@ class Connection implements ConnectionInterface {
     public async request(
         method: HttpMethodType,
         path: string,
-        config: RequestConfig
+        requestConfig: RequestConfig
     ): Promise<[AxiosResponse<unknown> | null, Error | null]> {
         await this.delay();
         let response: AxiosResponse<unknown>;
         try {
-            response = await this._request(method, path, config?.axiosConfig);
+            response = await this._request(
+                method,
+                path,
+                requestConfig?.axiosConfig
+            );
             this.updateBackoffInMs(
                 true,
-                config?.backoffCap ?? 0,
+                requestConfig?.backoffCap ?? 0,
                 Number(response?.config['axios-retry']) ?? 0
             );
             return [response, null];
@@ -101,11 +111,11 @@ class Connection implements ConnectionInterface {
                 err,
                 method,
                 path,
-                config,
+                requestConfig,
             });
             this.updateBackoffInMs(
                 false,
-                config?.backoffCap ?? 0,
+                requestConfig?.backoffCap ?? 0,
                 Number(response?.config['axios-retry']) ?? 0
             );
             return [null, err];

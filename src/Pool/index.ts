@@ -1,3 +1,5 @@
+import * as _ from 'lodash';
+
 import { ConnectionInterface } from '../Connection';
 
 interface PickerInterface {
@@ -6,18 +8,9 @@ interface PickerInterface {
 
 const RoundRobinPicker: PickerInterface = class {
     static pick(connections: ConnectionInterface[]): ConnectionInterface {
-        if (connections.length === 1) {
-            return connections[0];
-        }
-        let minObject: ConnectionInterface = connections[0];
-
-        for (const obj of connections) {
-            if (obj.getBackoffInMs() < minObject.getBackoffInMs()) {
-                minObject = obj;
-            }
-        }
-
-        return minObject;
+        return _.minBy(connections, (connection) =>
+            connection.getBackoffInMs()
+        );
     }
 };
 

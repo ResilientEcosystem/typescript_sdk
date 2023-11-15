@@ -1,11 +1,10 @@
-import axios, { AxiosInstance } from 'axios';
+import axios, { AxiosHeaders, AxiosInstance } from 'axios';
 import axiosRetry from 'axios-retry';
-import { DictionaryObject } from '../types/Connection';
 
 class AxiosAdapter {
     static createAxiosSession(
         baseURL: string,
-        headers: DictionaryObject
+        headers: AxiosHeaders
     ): AxiosInstance {
         const session: AxiosInstance = axios.create({
             baseURL,

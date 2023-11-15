@@ -1,6 +1,5 @@
-import { AxiosInstance } from 'axios';
-import { DictionaryObject } from '../types/Connection';
+import { AxiosHeaders, AxiosInstance } from 'axios';
 declare class AxiosAdapter {
-    static createAxiosSession(baseURL: string, headers: DictionaryObject): AxiosInstance;
+    static createAxiosSession(baseURL: string, headers: AxiosHeaders): AxiosInstance;
 }
 export default AxiosAdapter;

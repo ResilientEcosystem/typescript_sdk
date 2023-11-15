@@ -1,8 +1,10 @@
+import { TransportInterface } from '../Transport';
+import { AxiosHeaders, AxiosResponse } from 'axios';
 import { TransactionsEndpoint, OutputsEndpoint, BlocksEndpoint, AssetsEndpoint, MetadataEndpoint } from './endpoints';
-import { DictionaryObject, Node } from '../utils/types/Connection';
-import Transport from '../Transport';
+import { Node } from '../utils/types/Connection';
 interface ResDBConfig {
-    headers?: DictionaryObject;
+    transportModule?: typeof TransportInterface;
+    headers?: AxiosHeaders;
     timeout?: number;
 }
 declare class Resdb {
@@ -14,13 +16,14 @@ declare class Resdb {
     private _metadata;
     private _blocks;
     api_prefix: string;
-    constructor(nodes: string[] | Node[], transportModule?: typeof Transport, config?: ResDBConfig);
+    constructor(nodes: string[] | Node[], config?: ResDBConfig);
     nodes(): Node[];
     transaction(): TransactionsEndpoint;
     outputs(): OutputsEndpoint;
     asset(): AssetsEndpoint;
     metadata(): MetadataEndpoint;
-    transport(): Transport;
+    transport(): TransportInterface;
     blocks(): BlocksEndpoint;
+    info(headers: AxiosHeaders): Promise<[AxiosResponse<unknown> | null, Error | null]>;
 }
 export default Resdb;

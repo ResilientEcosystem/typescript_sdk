@@ -1,5 +1,5 @@
-import { DictionaryObject } from '../utils/types/Connection';
 import Resdb from './index';
+import { DictionaryObject } from '../utils/types/Connection';
 interface Endpoint {
     get(...args: unknown[]): Object;
 }
