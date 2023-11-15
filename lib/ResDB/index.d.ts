@@ -1,7 +1,7 @@
 import { TransportInterface } from '../Transport';
 import { AxiosHeaders, AxiosResponse } from 'axios';
 import { TransactionsEndpoint, OutputsEndpoint, BlocksEndpoint, AssetsEndpoint, MetadataEndpoint } from './endpoints';
-import { Node } from '../utils/types/Connection';
+import { Node } from '../utils/common/types';
 interface ResDBConfig {
     transportModule?: typeof TransportInterface;
     headers?: AxiosHeaders;

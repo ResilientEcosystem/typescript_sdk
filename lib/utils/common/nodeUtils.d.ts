@@ -1,5 +1,5 @@
 import { AxiosHeaders } from 'axios';
-import { DictionaryObject, Node } from '../types/Connection';
+import { DictionaryObject, Node } from './types';
 declare class NodeUtils {
     private static DEFAULT_NODE;
     static serialize: (data?: DictionaryObject) => string;

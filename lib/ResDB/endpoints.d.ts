@@ -1,27 +1,26 @@
 import Resdb from './index';
 import { AxiosHeaders, AxiosResponse } from 'axios';
 import { TransportInterface } from '../Transport';
-import { DictionaryObject } from '../utils/types/Connection';
+import { DictionaryObject } from '../utils/common/types';
 interface Endpoint {
     get(...args: unknown[]): Promise<[AxiosResponse<unknown> | null, Error | null]>;
 }
 interface GetEndpointConfig {
-    [key: string]: any;
     headers?: AxiosHeaders;
 }
 interface GetTransactionsEndpointConfig extends GetEndpointConfig {
     operation?: string;
 }
 interface GetOutputsEndpointConfig extends GetEndpointConfig {
-    spent: boolean;
+    spent?: boolean;
 }
 interface GetBlocksEndpointConfig extends GetEndpointConfig {
 }
 interface GetAssetsEndpointConfig extends GetEndpointConfig {
-    limit: number;
+    limit?: number;
 }
 interface GetMetadataEndpointConfig extends GetEndpointConfig {
-    limit: number;
+    limit?: number;
 }
 declare abstract class NamespacedDriver implements Endpoint {
     private readonly _path;

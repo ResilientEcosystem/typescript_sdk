@@ -4,11 +4,9 @@ type DictionaryObject = {
     [key: string]: any;
 };
 
-type HttpMethodType = 'POST' | 'DELETE' | 'GET' | 'PUT';
-
 interface Node {
     endpoint: string;
     headers?: AxiosHeaders;
 }
 
-export { DictionaryObject, HttpMethodType, Node };
+export { DictionaryObject, Node };

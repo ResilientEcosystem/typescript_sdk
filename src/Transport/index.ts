@@ -1,9 +1,9 @@
 import * as _ from 'lodash';
 import { Pool, PoolInterface } from '../Pool';
 import { ConnectionInterface, Connection } from '../Connection';
-import { AxiosRequestConfig, AxiosResponse } from 'axios';
+import { AxiosRequestConfig, AxiosResponse, Method } from 'axios';
 
-import { HttpMethodType, Node } from '../utils/types/Connection';
+import { Node } from '../utils/common/types';
 
 const NO_TIMEOUT_BACKOFF_CAP = 10000;
 
@@ -12,9 +12,9 @@ interface TransportInterface {
     timeoutInMs: number;
     connectionPool: PoolInterface;
     forwardRequest(
-        method: HttpMethodType,
+        method: Method,
         path: string,
-        axiosConfig?: AxiosRequestConfig<any>
+        axiosConfig?: AxiosRequestConfig
     ): Promise<[AxiosResponse<unknown> | null, Error | null]>;
 }
 
@@ -42,9 +42,9 @@ class Transport implements TransportInterface {
     }
 
     public async forwardRequest(
-        method: HttpMethodType,
+        method: Method,
         path: string,
-        axiosConfig?: AxiosRequestConfig<any>
+        axiosConfig?: AxiosRequestConfig
     ): Promise<[AxiosResponse<unknown> | null, Error | null]> {
         // do some checking with the backoff delta, ensure no errors with the pool call
         return await this.connectionPool.getConnection().request(method, path, {

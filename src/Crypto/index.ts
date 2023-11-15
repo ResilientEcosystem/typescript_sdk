@@ -1,7 +1,9 @@
 import * as crypto from 'crypto';
-import * as CryptoJS from 'crypto-js';
 
-import { CryptoKeypair } from '../utils/types/Crypto/index';
+type CryptoKeypair = {
+    publicKey: string;
+    privateKey: string;
+};
 
 interface CryptoInterface {
     generateKeypair(): CryptoKeypair;
@@ -27,7 +29,7 @@ const Crypto: CryptoInterface = class {
     }
 
     static hashData(data: string): string {
-        return CryptoJS.SHA3(this.encodeData(data)).toString(CryptoJS.enc.Hex);
+        return crypto.createHash('SHA3-256').update(data).digest('hex');
     }
 
     private static decodeKey(key: string): string {
@@ -39,4 +41,4 @@ const Crypto: CryptoInterface = class {
     }
 };
 
-export { Crypto, CryptoInterface };
+export { Crypto, CryptoInterface, CryptoKeypair };

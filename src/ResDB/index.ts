@@ -9,7 +9,7 @@ import {
     AssetsEndpoint,
     MetadataEndpoint,
 } from './endpoints';
-import { Node } from '../utils/types/Connection';
+import { Node } from '../utils/common/types';
 
 interface ResDBConfig {
     transportModule?: typeof TransportInterface;

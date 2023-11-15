@@ -1,4 +1,4 @@
-type CryptoKeypair = {
+declare type CryptoKeypair = {
     publicKey: string;
     privateKey: string;
 };

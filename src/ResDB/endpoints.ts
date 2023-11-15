@@ -2,7 +2,7 @@ import Resdb from './index';
 
 import { AxiosHeaders, AxiosResponse } from 'axios';
 import { TransportInterface } from '../Transport';
-import { DictionaryObject } from '../utils/types/Connection';
+import { DictionaryObject } from '../utils/common/types';
 
 interface Endpoint {
     get(
@@ -11,7 +11,6 @@ interface Endpoint {
 }
 
 interface GetEndpointConfig {
-    [key: string]: any;
     headers?: AxiosHeaders;
 }
 
@@ -20,18 +19,18 @@ interface GetTransactionsEndpointConfig extends GetEndpointConfig {
 }
 
 interface GetOutputsEndpointConfig extends GetEndpointConfig {
-    spent: boolean;
+    spent?: boolean;
 }
 
 // create interface for future expansion if needed
 interface GetBlocksEndpointConfig extends GetEndpointConfig {}
 
 interface GetAssetsEndpointConfig extends GetEndpointConfig {
-    limit: number;
+    limit?: number;
 }
 
 interface GetMetadataEndpointConfig extends GetEndpointConfig {
-    limit: number;
+    limit?: number;
 }
 
 abstract class NamespacedDriver implements Endpoint {

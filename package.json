@@ -25,7 +25,6 @@
         "@types/node": "20.8.2",
         "axios": "1.5.1",
         "axios-retry": "3.8.0",
-        "crypto-js": "4.1.1",
         "dotenv": "16.3.1",
         "husky": "8.0.3",
         "lint-staged": "15.0.2",

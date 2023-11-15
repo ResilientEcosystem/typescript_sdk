@@ -1,7 +1,8 @@
 import * as url from 'url';
+import * as _ from 'lodash';
 import { DateTime } from 'luxon';
 import { AxiosHeaders } from 'axios';
-import { DictionaryObject, Node } from '../types/Connection';
+import { DictionaryObject, Node } from './types';
 
 class NodeUtils {
     private static DEFAULT_NODE: string =
@@ -24,11 +25,9 @@ class NodeUtils {
         if (!nodes.length) {
             return [this.normalize_node(this.DEFAULT_NODE, headers)];
         }
-        const normalizedNodes: Node[] = [];
-        for (const n of nodes) {
-            normalizedNodes.push(this.normalize_node(n, headers));
-        }
-        return normalizedNodes;
+        return _.map<Node | string, Node>(nodes, (node) =>
+            this.normalize_node(node, headers)
+        );
     };
 
     public static gen_timestamp = (): string => {

@@ -3,23 +3,22 @@ import {
     AxiosInstance,
     AxiosRequestConfig,
     AxiosResponse,
+    Method,
 } from 'axios';
 import AxiosAdapter from '../utils/common/axiosAdapter';
 import logger from '../utils/common/logger';
-
-import { HttpMethodType } from '../utils/types/Connection';
 
 const BACKOFF_TIMEDELTA_IN_MS = 500;
 
 interface RequestConfig {
     backoffCap?: number;
-    axiosConfig?: AxiosRequestConfig<any>;
+    axiosConfig?: AxiosRequestConfig;
 }
 
 interface ConnectionInterface {
     getBackoffInMs(): number;
     request(
-        method: HttpMethodType,
+        method: Method,
         path: string,
         config: RequestConfig
     ): Promise<[AxiosResponse<unknown> | null, Error | null]>;
@@ -53,7 +52,7 @@ class Connection implements ConnectionInterface {
     private async _request(
         method: string,
         path: string,
-        axiosConfig: AxiosRequestConfig<any>
+        axiosConfig: AxiosRequestConfig
     ): Promise<AxiosResponse<unknown | void>> {
         const response: AxiosResponse<unknown> =
             await this.getSession().request({
@@ -88,7 +87,7 @@ class Connection implements ConnectionInterface {
     }
 
     public async request(
-        method: HttpMethodType,
+        method: Method,
         path: string,
         requestConfig: RequestConfig
     ): Promise<[AxiosResponse<unknown> | null, Error | null]> {

@@ -1,8 +1,8 @@
 import { AxiosHeaders } from 'axios';
-type DictionaryObject = {
+declare type DictionaryObject = {
     [key: string]: any;
 };
-type HttpMethodType = 'POST' | 'DELETE' | 'GET' | 'PUT';
+declare type HttpMethodType = 'POST' | 'DELETE' | 'GET' | 'PUT';
 interface Node {
     endpoint: string;
     headers?: AxiosHeaders;
