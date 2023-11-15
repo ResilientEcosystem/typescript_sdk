@@ -1,9 +1,37 @@
 import Resdb from './index';
 
+import { AxiosHeaders, AxiosResponse } from 'axios';
+import { TransportInterface } from '../Transport';
 import { DictionaryObject } from '../utils/types/Connection';
 
 interface Endpoint {
-    get(...args: unknown[]): Object;
+    get(
+        ...args: unknown[]
+    ): Promise<[AxiosResponse<unknown> | null, Error | null]>;
+}
+
+interface GetEndpointConfig {
+    [key: string]: any;
+    headers?: AxiosHeaders;
+}
+
+interface GetTransactionsEndpointConfig extends GetEndpointConfig {
+    operation?: string;
+}
+
+interface GetOutputsEndpointConfig extends GetEndpointConfig {
+    spent: boolean;
+}
+
+// create interface for future expansion if needed
+interface GetBlocksEndpointConfig extends GetEndpointConfig {}
+
+interface GetAssetsEndpointConfig extends GetEndpointConfig {
+    limit: number;
+}
+
+interface GetMetadataEndpointConfig extends GetEndpointConfig {
+    limit: number;
 }
 
 abstract class NamespacedDriver implements Endpoint {
@@ -15,7 +43,7 @@ abstract class NamespacedDriver implements Endpoint {
         this._driver = driver;
     }
 
-    public transport(): any {
+    public transport(): TransportInterface {
         return this._driver.transport();
     }
 
@@ -27,7 +55,9 @@ abstract class NamespacedDriver implements Endpoint {
         return this.api_prefix() + this._path;
     }
 
-    abstract get(...args: unknown[]): Object;
+    abstract get(
+        ...args: unknown[]
+    ): Promise<[AxiosResponse<unknown> | null, Error | null]>;
 }
 
 class TransactionsEndpoint extends NamespacedDriver {
@@ -35,22 +65,46 @@ class TransactionsEndpoint extends NamespacedDriver {
         super('/transactions/', driver);
     }
 
-    // public static prepare();
-    // public static fulfill();
-    public get(
+    /** WAITING ON ANOTHER FILE
+     * public static prepare();
+     * public static fulfill();
+     */
+
+    public async get(
         asset_id: string,
-        operation: string,
-        headers: DictionaryObject
-    ): Object {
-        return this.transport;
+        config: GetTransactionsEndpointConfig
+    ): Promise<[AxiosResponse<unknown> | null, Error | null]> {
+        return await this.transport().forwardRequest('GET', this.path(), {
+            params: { asset_id, operation: config?.operation },
+            headers: config?.headers,
+        });
     }
-    // public send_async(transaction, headers: DictionaryObject = {});
-    // public send_sync(transaction, headers: DictionaryObject = {})
-    // public send_commit();
 
-    // public retrieve(txid: string, headers: DictionaryObject = {}): Object {
+    /** NOT IMPLEMENTED
+     * public send_async(transaction, headers: DictionaryObject = {});
+     * public send_sync(transaction, headers: DictionaryObject = {})
+     */
 
-    // }
+    public async sendCommit(
+        transaction: DictionaryObject,
+        headers?: AxiosHeaders
+    ): Promise<[AxiosResponse<unknown> | null, Error | null]> {
+        const path = this.path() + 'commit';
+        return await this.transport().forwardRequest('POST', path, {
+            data: transaction, // is this right?
+            headers,
+        });
+    }
+
+    public async retrieve(
+        txid: string,
+        headers?: AxiosHeaders
+    ): Promise<[AxiosResponse<unknown> | null, Error | null]> {
+        const path = this.path() + txid;
+        return await this.transport().forwardRequest('POST', path, {
+            headers,
+        });
+    }
 }
 
 class OutputsEndpoint extends NamespacedDriver {
@@ -58,12 +112,14 @@ class OutputsEndpoint extends NamespacedDriver {
         super('/outputs/', driver);
     }
 
-    public get(
+    public async get(
         public_key: string,
-        spent: boolean = false,
-        headers: DictionaryObject = {}
-    ): Object {
-        return {};
+        config: GetOutputsEndpointConfig
+    ): Promise<[AxiosResponse<unknown> | null, Error | null]> {
+        return await this.transport().forwardRequest('GET', this.path(), {
+            params: { public_key, spent: config?.spent },
+            headers: config?.headers,
+        });
     }
 }
 
@@ -71,8 +127,14 @@ class BlocksEndpoint extends NamespacedDriver {
     public constructor(driver: Resdb) {
         super('/blocks/', driver);
     }
-    public get(txid: string, headers: DictionaryObject): Object {
-        return {};
+    public async get(
+        txid: string,
+        config: GetBlocksEndpointConfig
+    ): Promise<[AxiosResponse<unknown> | null, Error | null]> {
+        return await this.transport().forwardRequest('GET', this.path(), {
+            params: { transaction_id: txid },
+            headers: config?.headers,
+        });
     }
 }
 
@@ -80,12 +142,14 @@ class AssetsEndpoint extends NamespacedDriver {
     public constructor(driver: Resdb) {
         super('/assets/', driver);
     }
-    public get(
+    public async get(
         search: string,
-        limit: number = 0,
-        headers: DictionaryObject
-    ): Object {
-        return {};
+        config: GetAssetsEndpointConfig
+    ): Promise<[AxiosResponse<unknown> | null, Error | null]> {
+        return await this.transport().forwardRequest('GET', this.path(), {
+            params: { search, limit: config?.limit },
+            headers: config?.headers,
+        });
     }
 }
 
@@ -93,12 +157,14 @@ class MetadataEndpoint extends NamespacedDriver {
     public constructor(driver: Resdb) {
         super('/metadata/', driver);
     }
-    public get(
+    public async get(
         search: string,
-        limit: number = 0,
-        headers: DictionaryObject
-    ): Object {
-        return {};
+        config: GetMetadataEndpointConfig
+    ): Promise<[AxiosResponse<unknown> | null, Error | null]> {
+        return await this.transport().forwardRequest('GET', this.path(), {
+            params: { search, limit: config?.limit },
+            headers: config?.headers,
+        });
     }
 }
 

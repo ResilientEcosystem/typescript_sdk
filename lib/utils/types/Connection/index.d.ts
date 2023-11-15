@@ -1,4 +1,4 @@
-import { AxiosHeaders } from "axios";
+import { AxiosHeaders } from 'axios';
 type DictionaryObject = {
     [key: string]: any;
 };
