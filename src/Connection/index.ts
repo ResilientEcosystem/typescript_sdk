@@ -12,11 +12,13 @@ const BACKOFF_TIMEDELTA_IN_MS = 500;
 
 interface RequestConfig {
     backoffCap?: number;
+    timeout?: number;
     axiosConfig?: AxiosRequestConfig;
 }
 
 interface ConnectionInterface {
     getBackoffInMs(): number;
+    getNodeUrl(): string;
     request(
         method: Method,
         path: string,
@@ -45,45 +47,16 @@ class Connection implements ConnectionInterface {
         this.session = AxiosAdapter.createAxiosSession(nodeUrl, headers);
     }
 
-    private getSession(): AxiosInstance {
-        return this.session;
-    }
-
-    private async _request(
-        method: string,
-        path: string,
-        axiosConfig: AxiosRequestConfig
-    ): Promise<AxiosResponse<unknown | void>> {
-        const response: AxiosResponse<unknown> =
-            await this.getSession().request({
-                method,
-                url: path,
-                ...axiosConfig,
-            });
-        return response;
-    }
-
     public getBackoffInMs(): number {
         return this.backoffInMs;
     }
 
-    private updateBackoffInMs(
-        isSuccess: boolean,
-        backoffCapInMs: number = 0,
-        numRetries: number = 0
-    ): void {
-        if (isSuccess) {
-            this.backoffInMs = 0;
-            return;
-        }
-        this.backoffInMs = Math.min(
-            BACKOFF_TIMEDELTA_IN_MS * Math.pow(2, numRetries),
-            backoffCapInMs
-        );
+    public getNodeUrl(): string {
+        return this.nodeUrl;
     }
 
-    private async delay(): Promise<void> {
-        return await new Promise((r) => setTimeout(r, this.getBackoffInMs()));
+    private async delay(timeoutInMs: number): Promise<void> {
+        return await new Promise((r) => setTimeout(r, timeoutInMs));
     }
 
     public async request(
@@ -91,7 +64,7 @@ class Connection implements ConnectionInterface {
         path: string,
         requestConfig: RequestConfig
     ): Promise<[AxiosResponse<unknown> | null, Error | null]> {
-        await this.delay();
+        await this.delay(this.getBackoffInMs());
         let response: AxiosResponse<unknown>;
         try {
             response = await this._request(
@@ -119,6 +92,39 @@ class Connection implements ConnectionInterface {
             );
             return [null, err];
         }
+    }
+
+    private getSession(): AxiosInstance {
+        return this.session;
+    }
+
+    private async _request(
+        method: string,
+        path: string,
+        axiosConfig: AxiosRequestConfig
+    ): Promise<AxiosResponse<unknown | void>> {
+        const response: AxiosResponse<unknown> =
+            await this.getSession().request({
+                method,
+                url: path,
+                ...axiosConfig,
+            });
+        return response;
+    }
+
+    private updateBackoffInMs(
+        isSuccess: boolean,
+        backoffCapInMs: number = 0,
+        numRetries: number = 0
+    ): void {
+        if (isSuccess) {
+            this.backoffInMs = 0;
+            return;
+        }
+        this.backoffInMs = Math.min(
+            BACKOFF_TIMEDELTA_IN_MS * Math.pow(2, numRetries),
+            backoffCapInMs
+        );
     }
 }
 

@@ -11,4 +11,14 @@ describe('Connection Instance Works', () => {
         expect(res.status).toEqual(200);
         expect(user).toBeDefined();
     });
+
+    test("Calls a wrong endpoint - SHOULD RESULT IN ERROR", async() => {
+        const url = 'https://randomuser.me/';
+        const adapter = new Connection(url);
+
+        const [res, err] = await adapter.request('GET', '/WRONG_API');
+
+        expect(res).toEqual(null);
+        expect(err).toBeInstanceOf(Error)
+    })
 });

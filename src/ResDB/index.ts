@@ -2,13 +2,7 @@ import { Transport, TransportInterface } from '../Transport';
 import NodeUtils from '../utils/common/nodeUtils';
 import { AxiosHeaders, AxiosResponse } from 'axios';
 
-import {
-    TransactionsEndpoint,
-    OutputsEndpoint,
-    BlocksEndpoint,
-    AssetsEndpoint,
-    MetadataEndpoint,
-} from './endpoints';
+import { ResdbEndpoints } from './endpoints';
 import { Node } from '../utils/common/types';
 
 interface ResDBConfig {
@@ -20,11 +14,11 @@ interface ResDBConfig {
 class Resdb {
     private _nodes: Node[];
     private _transport: TransportInterface;
-    private _transaction: TransactionsEndpoint;
-    private _outputs: OutputsEndpoint;
-    private _assets: AssetsEndpoint;
-    private _metadata: MetadataEndpoint;
-    private _blocks: BlocksEndpoint;
+    private _transaction: ResdbEndpoints.TransactionsEndpoint;
+    private _outputs: ResdbEndpoints.OutputsEndpoint;
+    private _assets: ResdbEndpoints.AssetsEndpoint;
+    private _metadata: ResdbEndpoints.MetadataEndpoint;
+    private _blocks: ResdbEndpoints.BlocksEndpoint;
     public api_prefix: string = process.env.RESDB_VERSION || '/v1';
 
     public constructor(nodes: string[] | Node[], config: ResDBConfig = {}) {
@@ -36,30 +30,30 @@ class Resdb {
             this._nodes,
             config?.timeout || 20
         );
-        this._transaction = new TransactionsEndpoint(this);
-        this._outputs = new OutputsEndpoint(this);
-        this._assets = new AssetsEndpoint(this);
-        this._metadata = new MetadataEndpoint(this);
-        this._blocks = new BlocksEndpoint(this);
+        this._transaction = new ResdbEndpoints.TransactionsEndpoint(this);
+        this._outputs = new ResdbEndpoints.OutputsEndpoint(this);
+        this._assets = new ResdbEndpoints.AssetsEndpoint(this);
+        this._metadata = new ResdbEndpoints.MetadataEndpoint(this);
+        this._blocks = new ResdbEndpoints.BlocksEndpoint(this);
     }
 
     public nodes(): Node[] {
         return this._nodes;
     }
 
-    public transaction(): TransactionsEndpoint {
+    public transaction(): ResdbEndpoints.TransactionsEndpoint {
         return this._transaction;
     }
 
-    public outputs(): OutputsEndpoint {
+    public outputs(): ResdbEndpoints.OutputsEndpoint {
         return this._outputs;
     }
 
-    public asset(): AssetsEndpoint {
+    public asset(): ResdbEndpoints.AssetsEndpoint {
         return this._assets;
     }
 
-    public metadata(): MetadataEndpoint {
+    public metadata(): ResdbEndpoints.MetadataEndpoint {
         return this._metadata;
     }
 
@@ -67,7 +61,7 @@ class Resdb {
         return this._transport;
     }
 
-    public blocks(): BlocksEndpoint {
+    public blocks(): ResdbEndpoints.BlocksEndpoint {
         return this._blocks;
     }
 

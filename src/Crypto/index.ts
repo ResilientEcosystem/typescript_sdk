@@ -29,7 +29,10 @@ const Crypto: CryptoInterface = class {
     }
 
     static hashData(data: string): string {
-        return crypto.createHash('SHA3-256').update(data).digest('hex');
+        return crypto
+            .createHash('SHA3-256')
+            .update(this.encodeData(data))
+            .digest('hex');
     }
 
     private static decodeKey(key: string): string {

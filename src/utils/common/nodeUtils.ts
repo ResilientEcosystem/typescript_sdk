@@ -71,6 +71,9 @@ class NodeUtils {
             return { endpoint: url, headers: headers };
         }
         url = this.normalize_url(node['endpoint']);
+
+        // MAKE SURE THIS IS NOT NEEDED
+
         // const node_headers = {...headers}
         return {
             endpoint: url,

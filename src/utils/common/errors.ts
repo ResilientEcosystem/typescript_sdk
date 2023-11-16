@@ -1,8 +1,19 @@
-class ResilientDBError implements Error {
-    public name: string;
+interface ResilientDBError extends Error {}
+
+interface ErrorConstructor {
+    new (...args: unknown[]): Error;
+}
+
+declare var ResilientDBError: ErrorConstructor;
+
+class TimeoutError implements ResilientDBError {
+    public name: string = 'TimeoutError';
     public message: string;
-    public constructor(message?: string) {
-        this.name = 'ResilientDBError';
-        this.message = message ?? '';
+    public errorTrace: Error[];
+    public constructor(origin: string, errorTrace: Error[]) {
+        this.message = `Timeout Error in module ${origin}`;
+        this.errorTrace = errorTrace;
     }
 }
+
+export { TimeoutError };

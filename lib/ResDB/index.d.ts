@@ -1,6 +1,6 @@
 import { TransportInterface } from '../Transport';
 import { AxiosHeaders, AxiosResponse } from 'axios';
-import { TransactionsEndpoint, OutputsEndpoint, BlocksEndpoint, AssetsEndpoint, MetadataEndpoint } from './endpoints';
+import { ResdbEndpoints } from './endpoints';
 import { Node } from '../utils/common/types';
 interface ResDBConfig {
     transportModule?: typeof TransportInterface;
@@ -18,12 +18,12 @@ declare class Resdb {
     api_prefix: string;
     constructor(nodes: string[] | Node[], config?: ResDBConfig);
     nodes(): Node[];
-    transaction(): TransactionsEndpoint;
-    outputs(): OutputsEndpoint;
-    asset(): AssetsEndpoint;
-    metadata(): MetadataEndpoint;
+    transaction(): ResdbEndpoints.TransactionsEndpoint;
+    outputs(): ResdbEndpoints.OutputsEndpoint;
+    asset(): ResdbEndpoints.AssetsEndpoint;
+    metadata(): ResdbEndpoints.MetadataEndpoint;
     transport(): TransportInterface;
-    blocks(): BlocksEndpoint;
+    blocks(): ResdbEndpoints.BlocksEndpoint;
     info(headers: AxiosHeaders): Promise<[AxiosResponse<unknown> | null, Error | null]>;
 }
 export default Resdb;

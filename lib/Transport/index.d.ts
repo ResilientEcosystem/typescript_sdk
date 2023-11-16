@@ -3,7 +3,7 @@ import { AxiosRequestConfig, AxiosResponse, Method } from 'axios';
 import { Node } from '../utils/common/types';
 interface TransportInterface {
     nodes: Node[];
-    timeoutInMs: number;
+    timeoutInMs: number | null;
     connectionPool: PoolInterface;
     forwardRequest(method: Method, path: string, axiosConfig?: AxiosRequestConfig): Promise<[AxiosResponse<unknown> | null, Error | null]>;
 }
@@ -15,7 +15,7 @@ declare class Transport implements TransportInterface {
     nodes: Node[];
     timeoutInMs: number;
     connectionPool: PoolInterface;
-    constructor(nodes: Node[], timeoutInMs?: number);
+    constructor(nodes: Node[], timeoutInMs?: number | null);
     private constructEndpoints;
     forwardRequest(method: Method, path: string, axiosConfig?: AxiosRequestConfig): Promise<[AxiosResponse<unknown> | null, Error | null]>;
 }
