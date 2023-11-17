@@ -1,0 +1,36 @@
+{
+    "name": "resilientdb-sdk",
+    "version": "1.0.0",
+    "description": "The TypeScript SDK for ExpoLab's ResilientDB",
+    "main": "index.js",
+    "scripts": {
+        "test": "jest ./test",
+        "prettier": "prettier --write 'src/**/*.ts'",
+        "precommit": "tsc && npm run prettier && git add .",
+        "prepare": "husky install"
+    },
+    "author": "Steve Chen, Undergraduate Software Engineer in Research at ExpoLab",
+    "license": "ISC",
+    "devDependencies": {
+        "@types/crypto-js": "4.1.2",
+        "@types/jest": "29.5.7",
+        "husky": "8.0.0",
+        "jest": "29.7.0",
+        "prettier": "3.0.3",
+        "typescript": "5.2.2"
+    },
+    "dependencies": {
+        "@types/lodash": "4.14.201",
+        "@types/luxon": "3.3.3",
+        "@types/node": "20.8.2",
+        "axios": "1.5.1",
+        "axios-retry": "3.8.0",
+        "crypto-conditions": "2.2.1",
+        "husky": "8.0.3",
+        "lint-staged": "15.0.2",
+        "lodash": "4.17.21",
+        "luxon": "3.4.3",
+        "pre-commit": "1.2.2",
+        "winston": "3.10.0"
+    }
+}
