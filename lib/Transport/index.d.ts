@@ -1,6 +1,6 @@
 import { PoolInterface } from '../Pool';
 import { AxiosRequestConfig, AxiosResponse, Method } from 'axios';
-import { Node } from '../utils/common/types';
+import { Node } from '../utils/types';
 interface TransportInterface {
     nodes: Node[];
     timeoutInMs: number | null;

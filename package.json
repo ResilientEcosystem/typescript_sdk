@@ -9,7 +9,7 @@
         "precommit": "tsc && npm run prettier && git add .",
         "prepare": "husky install"
     },
-    "author": "Steve Chen, Software Engineer in Research at ExpoLab",
+    "author": "Steve Chen, Undergraduate Software Engineer in Research at ExpoLab",
     "license": "ISC",
     "devDependencies": {
         "@types/crypto-js": "4.1.2",
@@ -25,7 +25,7 @@
         "@types/node": "20.8.2",
         "axios": "1.5.1",
         "axios-retry": "3.8.0",
-        "dotenv": "16.3.1",
+        "crypto-conditions": "2.2.1",
         "husky": "8.0.3",
         "lint-staged": "15.0.2",
         "lodash": "4.17.21",

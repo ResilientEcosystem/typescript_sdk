@@ -1,12 +1,10 @@
-import dotenv from 'dotenv';
-
 import { Crypto, CryptoInterface } from './Crypto';
 import { ConnectionInterface, Connection } from './Connection';
 import Resdb from './ResDB';
 import { Transport } from './Transport';
 import { Pool } from './Pool';
 
-dotenv.config();
+// create a master class from which you can reference needed functionality
 
 export {
     Crypto,

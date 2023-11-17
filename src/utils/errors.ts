@@ -1,7 +1,7 @@
 interface ResilientDBError extends Error {}
 
 interface ErrorConstructor {
-    new (...args: unknown[]): Error;
+    new (...args: unknown[]): ResilientDBError;
 }
 
 declare var ResilientDBError: ErrorConstructor;

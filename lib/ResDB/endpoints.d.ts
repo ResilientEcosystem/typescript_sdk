@@ -1,7 +1,7 @@
 import Resdb from './index';
 import { AxiosHeaders, AxiosResponse } from 'axios';
 import { TransportInterface } from '../Transport';
-import { DictionaryObject } from '../utils/common/types';
+import { DictionaryObject } from '../utils/types';
 interface GetEndpointConfig {
     headers?: AxiosHeaders;
 }

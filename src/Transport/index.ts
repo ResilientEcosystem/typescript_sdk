@@ -2,9 +2,9 @@ import * as _ from 'lodash';
 import { Pool, PoolInterface } from '../Pool';
 import { ConnectionInterface, Connection } from '../Connection';
 import { AxiosRequestConfig, AxiosResponse, Method } from 'axios';
-import { TimeoutError } from '../utils/common/errors';
+import { TimeoutError } from '../utils/errors';
 
-import { Node } from '../utils/common/types';
+import { Node } from '../utils/types';
 
 class Timer {
     private startTime: number;

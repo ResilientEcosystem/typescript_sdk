@@ -1,3 +1,6 @@
+import * as cryptoconditions from 'crypto-conditions';
+import { ResdbEndpoints } from '../ResDB/endpoints';
+
 // check if this is right
 type UnspentOutput = {
     transaction_id: string;
@@ -8,12 +11,14 @@ type UnspentOutput = {
 };
 
 interface InputConstructorConfig {
-    fulfills: unknown;
+    fulfills?: ResdbEndpoints.TransactionsEndpoint; // Transaction Link
 }
 
-// class Input extends Object {
-//     public fulfillment
-//     public constructor(fulfillment, owners_before: string[], config: InputConstructorConfig) {
-
-//     }
-// }
+class Input implements Object {
+    public fulfillment: cryptoconditions.Fulfillment;
+    public constructor(
+        fulfillment: cryptoconditions.Fulfillment,
+        ownersBefore: string[],
+        config: InputConstructorConfig
+    ) {}
+}

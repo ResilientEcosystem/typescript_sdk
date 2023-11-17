@@ -5,8 +5,8 @@ import {
     AxiosResponse,
     Method,
 } from 'axios';
-import AxiosAdapter from '../utils/common/axiosAdapter';
-import logger from '../utils/common/logger';
+import AxiosAdapter from '../utils/axiosAdapter';
+import logger from '../utils/logger';
 
 const BACKOFF_TIMEDELTA_IN_MS = 500;
 

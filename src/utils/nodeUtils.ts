@@ -5,8 +5,7 @@ import { AxiosHeaders } from 'axios';
 import { DictionaryObject, Node } from './types';
 
 class NodeUtils {
-    private static DEFAULT_NODE: string =
-        process.env.DEFAULT_NODE || 'http://localhost:9984';
+    private static DEFAULT_NODE: string = 'http://localhost:9984';
 
     public static serialize = (data: DictionaryObject = {}): string => {
         const sortedKeys: string[] = Object.keys(data).sort();
