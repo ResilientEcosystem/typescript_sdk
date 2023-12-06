@@ -1,21 +1,44 @@
-import { ConnectionInterface } from '../Connection';
-interface PickerInterface {
-    pick(connections: ConnectionInterface[]): ConnectionInterface;
-}
-declare const RoundRobinPicker: PickerInterface;
-interface PoolInterface {
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+import { PickerInterface, PoolInterface } from './interface';
+import { ConnectionInterface } from '../Connection/interface';
+/**
+ * @class `RoundRobinPicker`
+ * @implements {PickerInterface}
+ */
+export declare const RoundRobinPicker: PickerInterface;
+/**
+ * @class `Pool`
+ * @implements {PoolInterface}
+ */
+export declare class Pool implements PoolInterface {
     connections: ConnectionInterface[];
     picker: PickerInterface;
-    getConnection(): ConnectionInterface;
-}
-interface PoolConstructor {
-    new (connections: ConnectionInterface[], pickerInterface: PickerInterface): PoolInterface;
-}
-declare var PoolInterface: PoolConstructor;
-declare class Pool implements PoolInterface {
-    connections: ConnectionInterface[];
-    picker: PickerInterface;
+    /**
+     * @constructor Creates Pool Instance
+     * @param {ConnectionInterface[]} connections
+     * @param {PickerInterface} pickerInterface DEFAULT PICKER INTERFACE IS `RoundRobinPicker`
+     */
     constructor(connections: ConnectionInterface[], pickerInterface?: PickerInterface);
+    /**
+     * @method getConnection
+     * @returns {ConnectionInterface} Returns node connection using the pickerInterface API
+     */
     getConnection(): ConnectionInterface;
 }
-export { RoundRobinPicker, Pool, PoolInterface };

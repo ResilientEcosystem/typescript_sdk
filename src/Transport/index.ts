@@ -1,57 +1,52 @@
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 import * as _ from 'lodash';
-import { Pool, PoolInterface } from '../Pool';
-import { ConnectionInterface, Connection } from '../Connection';
-import { AxiosRequestConfig, AxiosResponse, Method } from 'axios';
+
+import { Pool } from '../Pool';
+import { Connection } from '../Connection';
+import { Timer } from './helper';
+
 import { TimeoutError } from '../utils/errors';
 
-import { Node } from '../utils/types';
-
-class Timer {
-    private startTime: number;
-
-    start() {
-        this.startTime = new Date().getTime();
-    }
-
-    stop(): number {
-        const endTime = new Date().getTime();
-        const elapsedMilliseconds = endTime - this.startTime;
-        return elapsedMilliseconds;
-    }
-}
-
-const NO_TIMEOUT_BACKOFF_CAP = 10000;
-
-interface TransportInterface {
-    nodes: Node[];
-    timeoutInMs: number | null;
-    connectionPool: PoolInterface;
-    forwardRequest(
-        method: Method,
-        path: string,
-        axiosConfig?: AxiosRequestConfig
-    ): Promise<[AxiosResponse<unknown> | null, Error | null]>;
-}
-
-interface TransportConstructor {
-    new (nodes: Node[], timeoutInMs: number): TransportInterface;
-}
-
-declare var TransportInterface: TransportConstructor;
+import type { AxiosRequestConfig, AxiosResponse, Method } from 'axios';
+import type { TransportInterface } from './interface';
+import type { ConnectionInterface } from '../Connection/interface';
+import type { PoolInterface } from '../Pool/interface';
+import type { Node } from '../ResDB/interface';
 
 class Transport implements TransportInterface {
+    public static readonly NO_TIMEOUT_BACKOFF_CAP = 10000;
     public nodes: Node[];
-    public timeoutInMs: number;
+    public timeoutInMs: number | undefined;
     public connectionPool: PoolInterface;
-    public constructor(nodes: Node[], timeoutInMs: number | null = null) {
+    public constructor(nodes: Node[], timeoutInMs?: number) {
         this.nodes = nodes;
         this.timeoutInMs = timeoutInMs;
-        this.connectionPool = new Pool(this.constructEndpoints());
+        this.connectionPool = new Pool(
+            Transport.constructEndpoints(this.nodes)
+        );
     }
 
-    private constructEndpoints(): ConnectionInterface[] {
+    private static constructEndpoints(nodes: Node[]): ConnectionInterface[] {
         return _.map<Node, Connection>(
-            this.nodes,
+            nodes,
             ({ headers, endpoint }) => new Connection(endpoint, headers)
         );
     }
@@ -60,44 +55,36 @@ class Transport implements TransportInterface {
         method: Method,
         path: string,
         axiosConfig?: AxiosRequestConfig
-    ): Promise<[AxiosResponse<unknown> | null, Error | null]> {
+    ): Promise<[AxiosResponse | undefined, Error | undefined]> {
         // match the error functionality that of the python sdk
 
         const errorTrace: Error[] = [];
-        let timeout: number | null = this.timeoutInMs;
-        const backoffCap: number = timeout || NO_TIMEOUT_BACKOFF_CAP;
+        let timeout: number | undefined = this.timeoutInMs;
+        const backoffCap: number = timeout || Transport.NO_TIMEOUT_BACKOFF_CAP;
+        const timer: Timer = new Timer();
 
-        while (_.isNull(timeout) || timeout > 0) {
+        while (_.isUndefined(timeout) || timeout > 0) {
             const connection: ConnectionInterface =
                 this.connectionPool.getConnection();
-            const timer: Timer = new Timer();
             timer.start();
 
-            let response: Promise<
-                [AxiosResponse<unknown> | null, Error | null]
-            >;
+            let response: [AxiosResponse | undefined, Error | undefined];
             try {
-                response = connection.request(method, path, {
+                response = await connection.request(method, path, {
                     axiosConfig,
                     backoffCap,
                     timeout,
                 });
             } catch (err) {
                 errorTrace.push(err);
-                const ellapsedTime: number = timer.stop();
-                if (!_.isNull(timeout)) {
-                    timeout -= ellapsedTime;
-                }
+                timeout = timer.updateTime(timeout);
                 continue;
             }
-            const ellapsedTime: number = timer.stop();
-            if (!_.isNull(timeout)) {
-                timeout -= ellapsedTime;
-            }
+            timeout = timer.updateTime(timeout);
             return response;
         }
-        return [null, new TimeoutError('Transport', errorTrace)];
+        return [undefined, new TimeoutError('Transport', errorTrace)];
     }
 }
 
-export { Transport, TransportInterface };
+export { Transport };
