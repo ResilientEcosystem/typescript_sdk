@@ -111,4 +111,9 @@ declare class MissingPrivateKeyError implements ResilientDBError {
     message: string;
     constructor(message?: string);
 }
-export { ValueError, TimeoutError, TypeNotSupportedError, ThresholdTooDeep, KeypairMismatchError, AssetIdMismatchError, InvalidHashError, InputDoesNotExist, TransactionFailed, MissingPrivateKeyError };
+declare class InvalidSignature implements ResilientDBError {
+    name: string;
+    message: string;
+    constructor(message?: string);
+}
+export { ValueError, TimeoutError, TypeNotSupportedError, ThresholdTooDeep, KeypairMismatchError, AssetIdMismatchError, InvalidHashError, InputDoesNotExist, TransactionFailed, MissingPrivateKeyError, InvalidSignature };

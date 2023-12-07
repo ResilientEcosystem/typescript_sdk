@@ -18,7 +18,7 @@
  */
 import { AxiosHeaders } from 'axios';
 import type { Node } from '../ResDB/interface';
-import { TransactionOperationType } from '../Transaction/interface';
+import type { TransactionOperationType } from '../Transaction/interface';
 /**
  * @namespace NodeUtils
  * @constant {string} DEFAULT_NODE

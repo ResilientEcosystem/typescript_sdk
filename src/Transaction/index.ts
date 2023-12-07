@@ -1148,27 +1148,27 @@ export class Transaction {
          */
     }
 
-    // // more context need for the types
-    // public validateTransferInputs(resdb: ResDB, currentTransactions: any[]) : any {
-    //     const inputTxs: [] = []
-    //     const inputConditions: [] = []
-
-    //     for (const input of this.inputs) {
-    //         let inputTxId = input.fulfills.txid
-    //         let inputTx = (resdb as any).get_transaction(inputTxId) // this needs to be changed
-
-    //         if (!inputTx) {
-    //             for (const curTx in currentTransactions) {
-    //                 // this needs to be changed
-    //                 if ((curTx as any).id === inputTxId) {
-    //                     inputTx = curTx
-    //                 }
-    //             }
-    //         }
-    //         if (!inputTx) {
-    //             throw new InputDoesNotExist(`input txid ${inputTxId} does not exist`)
-    //         }
-
-    //     }
-    // }
+    // more context need for the types
+    public validateTransferInputs(
+        resdb: ResDB,
+        currentTransactions: any[]
+    ): any {
+        // const inputTxs: [] = []
+        // const inputConditions: [] = []
+        // for (const input of this.inputs) {
+        //     let inputTxId = input.fulfills.txid
+        //     let inputTx = (resdb as any).get_transaction(inputTxId) // this needs to be changed
+        //     if (!inputTx) {
+        //         for (const curTx in currentTransactions) {
+        //             // this needs to be changed
+        //             if ((curTx as any).id === inputTxId) {
+        //                 inputTx = curTx
+        //             }
+        //         }
+        //     }
+        //     if (!inputTx) {
+        //         throw new InputDoesNotExist(`input txid ${inputTxId} does not exist`)
+        //     }
+        //}
+    }
 }
