@@ -814,7 +814,6 @@ export class Transaction {
         return inputCopy;
     }
 
-    // work on
     private static signThresholdSignatureFulfillment(
         input: Input,
         message: string,

@@ -20,8 +20,12 @@
 import type { AxiosHeaders, AxiosResponse } from 'axios';
 import type { ResdbEndpoints } from './endpoints';
 import type { TransportInterface } from '../Transport/interface';
-import type { TransactionOperationType } from '../Transaction/interface';
-import type { Input } from '../Transaction';
+import type {
+    CreateAsset,
+    InputObjectSerializable,
+    TransactionOperationType,
+    TransferAsset,
+} from '../Transaction/interface';
 
 /**
  * @interface Node
@@ -166,11 +170,12 @@ export interface GetMetadataEndpointConfig extends GetEndpointConfig {
     limit?: number;
 }
 
+// TODO
 export interface PrepareTransactionConfig {
-    operation?: TransactionOperationType;
-    signer?: string[] | string;
+    operation: TransactionOperationType;
+    signers: string[] | string;
     recipients?: string[] | string;
-    asset?: string[] | string[];
-    metadata?: string[] | string;
-    inputs?: Input[];
+    asset?: CreateAsset | TransferAsset;
+    metadata?: Record<string, unknown>;
+    inputs?: InputObjectSerializable[];
 }

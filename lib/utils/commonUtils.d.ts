@@ -18,6 +18,7 @@
  */
 import { AxiosHeaders } from 'axios';
 import type { Node } from '../ResDB/interface';
+import { TransactionOperationType } from '../Transaction/interface';
 /**
  * @namespace NodeUtils
  * @constant {string} DEFAULT_NODE
@@ -52,4 +53,11 @@ export declare namespace DataUtils {
      * @returns {string} - Sorts dictionary and returns stringified dictionary
      */
     const serialize: (data: Record<string, unknown>) => string;
+}
+export declare namespace TransactionUtils {
+    class CreateOperation {
+    }
+    class TransferOperation {
+    }
+    function normalizeOperation(operation: TransactionOperationType): CreateOperation | TransferOperation;
 }

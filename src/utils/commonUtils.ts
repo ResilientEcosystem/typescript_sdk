@@ -22,6 +22,8 @@ import * as _ from 'lodash';
 import { DateTime } from 'luxon';
 import { AxiosHeaders } from 'axios';
 import type { Node } from '../ResDB/interface';
+import { TransactionOperationType } from '../Transaction/interface';
+import { ValueError } from './errors';
 
 /**
  * @namespace NodeUtils
@@ -146,4 +148,27 @@ export namespace DataUtils {
         }
         return JSON.stringify(sortedObject);
     };
+}
+
+export namespace TransactionUtils {
+    export class CreateOperation {
+        // Class representing the 'CREATE' transaction operation.
+    }
+
+    export class TransferOperation {
+        // Class representing the 'TRANSFER' transaction operation.
+    }
+
+    const opsMap: {
+        [key: string]: new () => CreateOperation | TransferOperation;
+    } = {
+        CREATE: CreateOperation,
+        TRANSFER: TransferOperation,
+    };
+
+    export function normalizeOperation(
+        operation: TransactionOperationType
+    ): CreateOperation | TransferOperation {
+        return new opsMap[operation]();
+    }
 }

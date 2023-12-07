@@ -19,7 +19,8 @@
 import { Resdb } from './index';
 import type { AxiosHeaders, AxiosResponse } from 'axios';
 import type { TransportInterface } from '../Transport/interface';
-import type { Endpoint, GetAssetsEndpointConfig, GetBlocksEndpointConfig, GetMetadataEndpointConfig, GetOutputsEndpointConfig, GetTransactionsEndpointConfig } from './interface';
+import type { Endpoint, GetAssetsEndpointConfig, GetBlocksEndpointConfig, GetMetadataEndpointConfig, GetOutputsEndpointConfig, GetTransactionsEndpointConfig, PrepareTransactionConfig } from './interface';
+import { TransactionSerializable } from '../Transaction/interface';
 /**
  * @namespace ResdbEndpoints
  */
@@ -79,6 +80,8 @@ export declare namespace ResdbEndpoints {
          * @returns {TransactionsEndpoint} Instantiates instance of TransactionsEndpoint
          */
         constructor(driver: Resdb);
+        static prepare(config: PrepareTransactionConfig): TransactionSerializable;
+        static fulfill(transaction: TransactionSerializable, privateKeys: string | string[]): TransactionSerializable;
         /**
          * @method get
          * @param {string} asset_id

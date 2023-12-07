@@ -23,6 +23,7 @@ export * from './ResDB';
 export * from './Transaction';
 export * from './Transport';
 export * from './Validate';
+export * from "./Offchain";
 export * from './utils/errors';
 export * from './Connection/interface';
 export * from './Crypto/interface';
