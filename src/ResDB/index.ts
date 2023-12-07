@@ -22,7 +22,7 @@ import { NodeUtils } from '../utils/commonUtils';
 import { ResdbEndpoints } from './endpoints';
 
 import type { TransportInterface } from '../Transport/interface';
-import type { Axios, AxiosHeaders, AxiosResponse } from 'axios';
+import type { AxiosHeaders, AxiosResponse } from 'axios';
 import type { ResDBConfig, ResdbInterface } from './interface';
 import type { Node } from './interface';
 

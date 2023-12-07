@@ -101,4 +101,14 @@ declare class InputDoesNotExist implements ResilientDBError {
     message: string;
     constructor(message?: string);
 }
-export { ValueError, TimeoutError, TypeNotSupportedError, ThresholdTooDeep, KeypairMismatchError, AssetIdMismatchError, InvalidHashError, InputDoesNotExist, };
+declare class TransactionFailed implements ResilientDBError {
+    name: string;
+    message: string;
+    constructor(message?: string);
+}
+declare class MissingPrivateKeyError implements ResilientDBError {
+    name: string;
+    message: string;
+    constructor(message?: string);
+}
+export { ValueError, TimeoutError, TypeNotSupportedError, ThresholdTooDeep, KeypairMismatchError, AssetIdMismatchError, InvalidHashError, InputDoesNotExist, TransactionFailed, MissingPrivateKeyError };

@@ -18,6 +18,7 @@
  */
 
 import { Resdb } from './index';
+import { Offchain } from '../Offchain';
 
 import type { AxiosHeaders, AxiosResponse } from 'axios';
 import type { TransportInterface } from '../Transport/interface';
@@ -31,6 +32,7 @@ import type {
     EndpointUrls,
     PrepareTransactionConfig,
 } from './interface';
+import { TransactionSerializable } from '../Transaction/interface';
 
 /**
  * @namespace ResdbEndpoints
@@ -118,12 +120,16 @@ export namespace ResdbEndpoints {
             super(endpointUrlStrings.transaction, driver);
         }
 
-        // TODO
-        // public static prepare(config: PrepareTransactionConfig) {
-        // };
-        // public static fulfill() {
+        public static prepare(config: PrepareTransactionConfig) {
+            return Offchain.prepareTransferTransaction(config);
+        }
 
-        // };
+        public static fulfill(
+            transaction: TransactionSerializable,
+            privateKeys: string | string[]
+        ) {
+            return Offchain.fulfillTransaction(transaction, privateKeys);
+        }
 
         /**
          * @method get

@@ -130,6 +130,22 @@ class InputDoesNotExist implements ResilientDBError {
     }
 }
 
+class TransactionFailed implements ResilientDBError {
+    public name: string = 'TransactionFailed';
+    public message: string;
+    public constructor(message?: string) {
+        this.message = `TransactionFailed: ${message}`;
+    }
+}
+
+class MissingPrivateKeyError implements ResilientDBError {
+    public name: string = 'MissingPrivateKeyError';
+    public message: string;
+    public constructor(message?: string) {
+        this.message = `MissingPrivateKeyError: ${message}`;
+    }
+}
+
 export {
     ValueError,
     TimeoutError,
@@ -139,4 +155,6 @@ export {
     AssetIdMismatchError,
     InvalidHashError,
     InputDoesNotExist,
+    TransactionFailed,
+    MissingPrivateKeyError,
 };
