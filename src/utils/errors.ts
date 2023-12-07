@@ -146,6 +146,14 @@ class MissingPrivateKeyError implements ResilientDBError {
     }
 }
 
+class InvalidSignature implements ResilientDBError {
+    public name: string = 'InvalidSignature';
+    public message: string;
+    public constructor(message?: string) {
+        this.message = `InvalidSignature: ${message}`;
+    }
+}
+
 export {
     ValueError,
     TimeoutError,
@@ -157,4 +165,5 @@ export {
     InputDoesNotExist,
     TransactionFailed,
     MissingPrivateKeyError,
+    InvalidSignature,
 };

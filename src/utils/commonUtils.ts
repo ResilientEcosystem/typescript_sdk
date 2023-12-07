@@ -22,8 +22,7 @@ import * as _ from 'lodash';
 import { DateTime } from 'luxon';
 import { AxiosHeaders } from 'axios';
 import type { Node } from '../ResDB/interface';
-import { TransactionOperationType } from '../Transaction/interface';
-import { ValueError } from './errors';
+import type { TransactionOperationType } from '../Transaction/interface';
 
 /**
  * @namespace NodeUtils

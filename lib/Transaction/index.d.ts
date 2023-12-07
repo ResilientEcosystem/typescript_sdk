@@ -115,5 +115,6 @@ export declare class Transaction {
     static registerType(txType: any, txClass: any): void;
     resolveClass(operation: TransactionOperationType): any;
     static validateSchema(tx: TransactionSerializable): void;
+    validateTransferInputs(resdb: ResDB, currentTransactions: any[]): any;
 }
 export {};
